@@ -32,7 +32,6 @@ import com.vonglasow.michael.satstat.R;
 
 import android.Manifest;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -42,20 +41,14 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
+import ua.com.vassiliev.androidfilebrowser.FileBrowserActivity;
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -66,19 +59,6 @@ public class SettingsActivity extends AppCompatActivity implements OnPreferenceC
 
 	public static final int REQUEST_CODE_PICK_MAP_PATH = 1;
 
-	/**
-	 * A string array that specifies the name of the intent to use, and the scheme to use with it
-	 * when setting the data for the intent.
-	 * 
-	 * @author k9mail, mvglasow
-	 */
-	private static final String[][] PICK_DIRECTORY_INTENTS = {
-		{ Intent.ACTION_PICK, "folder://" },                      // CM File Manager, Blackmoon File Browser, possibly others
-		{ "org.openintents.action.PICK_DIRECTORY", "file://" },   // OI File Manager, possibly others
-		{ "com.estrongs.action.PICK_DIRECTORY", "file://" },      // ES File Explorer
-		{ "com.androidworkz.action.PICK_DIRECTORY", "file://" }
-	};
-	
 	private SharedPreferences mSharedPreferences;
 	Preference prefMapPath;
 	String prefMapPathValue = Const.MAP_PATH_DEFAULT;
@@ -90,7 +70,7 @@ public class SettingsActivity extends AppCompatActivity implements OnPreferenceC
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_CODE_PICK_MAP_PATH) {
 			if (resultCode == RESULT_OK) {
-				setMapPath(data.getData().getPath());
+				setMapPath(data.getStringExtra(FileBrowserActivity.returnDirectoryParameter));
 			}
 		}
 	}
@@ -150,67 +130,10 @@ public class SettingsActivity extends AppCompatActivity implements OnPreferenceC
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
 		if (preference == prefMapPath) {
-			boolean success = false;
-			int i = 0;
-			do {
-				String intentAction = PICK_DIRECTORY_INTENTS[i][0];
-				String uriPrefix = PICK_DIRECTORY_INTENTS[i][1];
-				Intent intent = new Intent(intentAction);
-				if (uriPrefix != null)
-					intent.setData(Uri.parse(uriPrefix + prefMapPathValue));
-
-				try {
-					startActivityForResult(intent, REQUEST_CODE_PICK_MAP_PATH);
-					Log.i("SettingsActivity", String.format("Sending intent: %s", intentAction));
-					success = true;
-				} catch (ActivityNotFoundException e) {
-					// Try the next intent in the list
-					i++;
-				}
-			} while (!success && (i < PICK_DIRECTORY_INTENTS.length));
-
-			if (!success) {
-				//No app for folder browsing is installed, show a fallback dialog
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-				builder.setTitle(getString(R.string.pref_map_path));
-				
-				LayoutInflater inflater = LayoutInflater.from(this);
-				final View alertView = inflater.inflate(R.layout.alert_map_path, null);
-				final EditText editPath = (EditText) alertView.findViewById(R.id.editPath);
-				editPath.setText(prefMapPathValue);
-				final ImageButton btnOiFilemanager = (ImageButton) alertView.findViewById(R.id.btn_oi_filemanager);
-				btnOiFilemanager.setTag(Uri.parse("market://details?id=org.openintents.filemanager"));
-				final ImageButton btnCmFilemanager = (ImageButton) alertView.findViewById(R.id.btn_cm_filemanager);
-				btnCmFilemanager.setTag(Uri.parse("market://details?id=com.cyanogenmod.filemanager.ics"));
-				final View.OnClickListener clickListener = new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (v.getTag() instanceof Uri)
-						startActivity(new Intent(Intent.ACTION_VIEW, (Uri) v.getTag()));
-					}
-				};
-				builder.setView(alertView);
-				btnOiFilemanager.setOnClickListener(clickListener);
-				btnCmFilemanager.setOnClickListener(clickListener);
-
-				builder.setPositiveButton(getString(R.string.action_ok), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						setMapPath(editPath.getText().toString());
-					}
-				});
-
-				builder.setNegativeButton(getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						// NOP
-					}
-				});
-
-				builder.show();
-				success = true;
-			}
-
-			return success;
+			Intent intent = new Intent(FileBrowserActivity.INTENT_ACTION_SELECT_DIR, null, this, FileBrowserActivity.class);
+			intent.putExtra(FileBrowserActivity.startDirectoryParameter, prefMapPathValue);
+			startActivityForResult(intent, REQUEST_CODE_PICK_MAP_PATH);
+			return true;
 		} else if (preference == prefMapDownload) {
 			if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
 				startActivity(new Intent(this, MapDownloadActivity.class));
