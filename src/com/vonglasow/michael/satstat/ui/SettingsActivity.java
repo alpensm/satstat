@@ -19,6 +19,7 @@
 
 package com.vonglasow.michael.satstat.ui;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -131,7 +132,14 @@ public class SettingsActivity extends AppCompatActivity implements OnPreferenceC
 	public boolean onPreferenceClick(Preference preference) {
 		if (preference == prefMapPath) {
 			Intent intent = new Intent(FileBrowserActivity.INTENT_ACTION_SELECT_DIR, null, this, FileBrowserActivity.class);
-			intent.putExtra(FileBrowserActivity.startDirectoryParameter, prefMapPathValue);
+			File mapDir = new File(prefMapPathValue);
+			if (!mapDir.exists())
+				mapDir.mkdirs();
+			if (!mapDir.exists() || !mapDir.canWrite())
+				mapDir = getExternalFilesDir(null);
+			else if (!mapDir.isDirectory())
+				mapDir = mapDir.getParentFile();
+			intent.putExtra(FileBrowserActivity.startDirectoryParameter, mapDir.getAbsolutePath());
 			startActivityForResult(intent, REQUEST_CODE_PICK_MAP_PATH);
 			return true;
 		} else if (preference == prefMapDownload) {
