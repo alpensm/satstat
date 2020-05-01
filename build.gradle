@@ -1,6 +1,8 @@
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
+        google()
     }
 
     dependencies {
@@ -9,6 +11,12 @@ buildscript {
 }
 
 apply plugin: 'com.android.application'
+
+repositories {
+    mavenCentral()
+    jcenter()
+    google()
+}
 
 android {
     compileSdkVersion 23
@@ -46,9 +54,9 @@ android {
     }
 
     dependencies {
-        compile 'com.android.support:support-v4:23.2.1'
-        compile 'com.android.support:appcompat-v7:23.2.1'
-        compile 'com.android.support:design:23.2.1'
+        compile 'com.android.support:support-v4:23.2.+'
+        compile 'com.android.support:appcompat-v7:23.2.+'
+        compile 'com.android.support:design:23.2.+'
         
         compile 'commons-net:commons-net:3.5'
 
