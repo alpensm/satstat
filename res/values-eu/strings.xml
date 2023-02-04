@@ -8,9 +8,6 @@
     <string name="action_agps">Eguneratu AGPS datuak</string>
     <string name="action_legend">Legenda</string>
     <string name="action_about">Honi buruz</string>
-    <string name="dot" translatable="false">&#x25a0;</string>
-    <string name="smallDot" translatable="false">&#x25fc;</string>
-    <string name="dotSpace" translatable="false">&#x25a0;&#x00a0;</string>
     <string name="error_write_file">Errorrea fitxategian idaztean</string>
     <string name="error_ext_storage">Kanpoko biltegiratzea ez dago eskuragarri</string>
     <string name="info_start_rec">Grabatzen hasi da</string>
@@ -150,7 +147,6 @@
     <string name="pref_wifi">WiFira konektatuta egotean</string>
     <string name="pref_wifi_summary">Freskatu AGPS datuak nire gailua WiFi sare batera konektatzean</string>
     <string name="pref_freq">Eguneratze-tartea</string>
-    <string name="pref_freq_summary" translatable="false">%s</string>
 
     <string-array name="prefs_freq_keys">
         <item>Etengabe</item>
