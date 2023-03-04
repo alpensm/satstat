@@ -101,9 +101,9 @@
         Wenn etwas nicht so funktioniert, wie es sollte, oder
         wenn Sie Verbesserungsvorschläge haben, melden Sie diese bitte unter:
         &lt;br/&gt;
-        &lt;a href="https://github.com/mvglasow/satstat/issues&gt;https://github.com/mvglasow/satstat/issues&lt;/a&gt;
+        &lt;a href="https://gitlab.com/mvglasow/satstat/issues&gt;https://gitlab.com/mvglasow/satstat/issues&lt;/a&gt;
         &lt;/p&gt;&lt;p&gt;
-        Copyright &#169; 2013 – 2018 Michael von Glasow and contributors
+        Copyright &#169; 2013 – 2023 Michael von Glasow and contributors
         &lt;br/&gt;
         Portions &#169; Jonathan Stott, k9mail, mapsforge.org, Polidea
         &lt;/p&gt;&lt;p&gt;
@@ -128,7 +128,7 @@
         &lt;/p&gt;&lt;p&gt;
         Der Quellcode für diese Applikation ist unter:
         &lt;br/&gt;
-        &lt;a href="https://github.com/mvglasow/satstat&gt;https://github.com/mvglasow/satstat&lt;/a&gt;</string>
+        &lt;a href="https://gitlab.com/mvglasow/satstat&gt;https://gitlab.com/mvglasow/satstat&lt;/a&gt;</string>
     <string name="unit_degree">°</string>
     <string name="unit_km_h">&#x00a0;km/h</string>
     <string name="unit_kn">&#x00a0;kn</string>
