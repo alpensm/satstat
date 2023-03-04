@@ -201,7 +201,7 @@ public class CellTowerGsm extends CellTower {
 	}
 	
 	public void setMnc(int mnc) {
-		if ((mcc != Integer.MAX_VALUE) && (mcc != -1))
+		if ((mnc != Integer.MAX_VALUE) && (mcc != -1))
 			this.mnc = mnc;
 		else
 			this.mnc = CellTower.UNKNOWN;
