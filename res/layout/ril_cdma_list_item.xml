@@ -2,14 +2,14 @@
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="26" >
+    android:weightSum="28" >
 
-    <TextView
+    <ImageView
         android:id="@+id/type"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:scaleType="center" />
 
     <TextView
         android:id="@+id/sid"

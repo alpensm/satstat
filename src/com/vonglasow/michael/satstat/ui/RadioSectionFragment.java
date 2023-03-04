@@ -322,22 +322,21 @@ public class RadioSectionFragment extends Fragment {
 		}
 	}
 
-
 	/**
-	 * Gets the display color for a phone network generation.
+	 * Gets the display icon for a cell.
 	 * @param generation The network generation, i.e. {@code 2}, {@code 3} or {@code 4} for any flavor of 2G, 3G or 4G, or {@code 0} for unknown
-	 * @return The color in which to display the indicator. If {@code generation} is {@code 0} or not a valid generation, the color returned will be transparent.
+	 * @return The resource identifier for the icon. If {@code generation} is {@code 0} or not a valid generation, the icon returned will be black and white.
 	 */
-	public static int getColorFromGeneration(int generation) {
+	public static int getCellIcon(int generation) {
 		switch (generation) {
 		case 2:
-			return(R.color.gen2);
+			return(R.drawable.ic_content_cell_2g_all);
 		case 3:
-			return(R.color.gen3);
+			return(R.drawable.ic_content_cell_3g_all);
 		case 4:
-			return(R.color.gen4);
+			return(R.drawable.ic_content_cell_4g_all);
 		default:
-			return(android.R.color.transparent);
+			return(R.drawable.ic_content_cell_all);
 		}
 	}
 
@@ -543,14 +542,13 @@ public class RadioSectionFragment extends Fragment {
 
 	protected void showCellCdma(CellTowerCdma cellTower) {
 		TableRow row = (TableRow) mainActivity.getLayoutInflater().inflate(R.layout.ril_cdma_list_item, null);
-		TextView type = (TextView) row.findViewById(R.id.type);
+		ImageView type = (ImageView) row.findViewById(R.id.type);
 		TextView sid = (TextView) row.findViewById(R.id.sid);
 		TextView nid = (TextView) row.findViewById(R.id.nid);
 		TextView bsid = (TextView) row.findViewById(R.id.bsid);
 		TextView dbm = (TextView) row.findViewById(R.id.dbm);
 
-		type.setTextColor(rilCdmaCells.getContext().getResources().getColor(getColorFromGeneration(cellTower.getGeneration())));
-		type.setText(rilCdmaCells.getContext().getResources().getString(R.string.smallDot));
+		type.setImageResource(getCellIcon(cellTower.getGeneration()));
 
 		sid.setText(formatCellData(rilCdmaCells.getContext(), null, cellTower.getSid()));
 
@@ -566,7 +564,7 @@ public class RadioSectionFragment extends Fragment {
 
 	protected void showCellGsm(CellTowerGsm cellTower) {
 		TableRow row = (TableRow) mainActivity.getLayoutInflater().inflate(R.layout.ril_list_item, null);
-		TextView type = (TextView) row.findViewById(R.id.type);
+		ImageView type = (ImageView) row.findViewById(R.id.type);
 		TextView mcc = (TextView) row.findViewById(R.id.mcc);
 		TextView mnc = (TextView) row.findViewById(R.id.mnc);
 		TextView area = (TextView) row.findViewById(R.id.area);
@@ -575,8 +573,7 @@ public class RadioSectionFragment extends Fragment {
 		TextView unit = (TextView) row.findViewById(R.id.unit);
 		TextView dbm = (TextView) row.findViewById(R.id.dbm);
 
-		type.setTextColor(rilCells.getContext().getResources().getColor(getColorFromGeneration(cellTower.getGeneration())));
-		type.setText(rilCells.getContext().getResources().getString(R.string.smallDot));
+		type.setImageResource(getCellIcon(cellTower.getGeneration()));
 
 		mcc.setText(formatCellData(rilCells.getContext(), "%03d", cellTower.getMcc()));
 
@@ -605,7 +602,7 @@ public class RadioSectionFragment extends Fragment {
 
 	protected void showCellLte(CellTowerLte cellTower) {
 		TableRow row = (TableRow) mainActivity.getLayoutInflater().inflate(R.layout.ril_list_item, null);
-		TextView type = (TextView) row.findViewById(R.id.type);
+		ImageView type = (ImageView) row.findViewById(R.id.type);
 		TextView mcc = (TextView) row.findViewById(R.id.mcc);
 		TextView mnc = (TextView) row.findViewById(R.id.mnc);
 		TextView area = (TextView) row.findViewById(R.id.area);
@@ -614,8 +611,7 @@ public class RadioSectionFragment extends Fragment {
 		TextView unit = (TextView) row.findViewById(R.id.unit);
 		TextView dbm = (TextView) row.findViewById(R.id.dbm);
 
-		type.setTextColor(rilLteCells.getContext().getResources().getColor(getColorFromGeneration(cellTower.getGeneration())));
-		type.setText(rilLteCells.getContext().getResources().getString(R.string.smallDot));
+		type.setImageResource(getCellIcon(cellTower.getGeneration()));
 
 		mcc.setText(formatCellData(rilLteCells.getContext(), "%03d", cellTower.getMcc()));
 
