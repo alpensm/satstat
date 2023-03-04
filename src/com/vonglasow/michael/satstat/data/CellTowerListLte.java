@@ -14,28 +14,6 @@ import android.util.Log;
 
 public class CellTowerListLte extends CellTowerList<CellTowerLte> {
 	/**
-	 * Returns the cell tower with the specified data, or {@code null} if it is not in the list. 
-	 */
-	public CellTowerLte get(int pci) {
-		String entry = CellTowerLte.getAltText(pci);
-		if (entry == null)
-			return null;
-		else
-			return this.get(entry);
-	}
-	
-	/**
-	 * Returns the cell tower with the specified data, or {@code null} if it is not in the list. 
-	 */
-	public CellTowerLte get(int mcc, int mnc, int tac, int ci) {
-		String entry = CellTowerLte.getText(mcc, mnc, tac, ci);
-		if (entry == null)
-			return null;
-		else
-			return this.get(entry);
-	}
-	
-	/**
 	 * Adds or updates a cell tower.
 	 * <p>
 	 * If the cell tower is already in the list, its data is updated; if not, a
@@ -48,40 +26,16 @@ public class CellTowerListLte extends CellTowerList<CellTowerLte> {
 	 * @return The new or updated entry.
 	 */
 	public CellTowerLte update(String networkOperator, GsmCellLocation location) {
+		this.removeSource(CellTower.SOURCE_CELL_LOCATION);
 		int mcc = CellTower.UNKNOWN;
 		int mnc = CellTower.UNKNOWN;
 		if (networkOperator.length() > 3) {
 			mcc = Integer.parseInt(networkOperator.substring(0, 3));
 			mnc = Integer.parseInt(networkOperator.substring(3));
 		}
-		CellTowerLte result = null;
-		CellTowerLte cand = this.get(mcc, mnc, location.getLac(), location.getCid());
-		if ((cand != null) && CellTower.matches(location.getPsc(), cand.getPci()))
-			result = cand;
-		if (result == null) {
-			cand = this.get(location.getPsc());
-			if ((cand != null)
-					&& CellTower.matches(mcc, cand.getMcc())
-					&& CellTower.matches(mnc, cand.getMnc())
-					&& CellTower.matches(location.getLac(), cand.getTac())
-					&& CellTower.matches(location.getCid(), cand.getCi()))
-				result = cand;
-		}
-		if (result == null)
-			result = new CellTowerLte(mcc, mnc, location.getLac(), location.getCid(), location.getPsc());
-		if (result.getMcc() == CellTower.UNKNOWN)
-			result.setMcc(mcc);
-		if (result.getMnc() == CellTower.UNKNOWN)
-			result.setMnc(mnc);
-		if (result.getTac() == CellTower.UNKNOWN)
-			result.setTac(location.getLac());
-		if (result.getCi() == CellTower.UNKNOWN)
-			result.setCi(location.getCid());
-		if (result.getPci() == CellTower.UNKNOWN)
-			result.setPci(location.getPsc());
-		this.put(result.getText(), result);
-		this.put(result.getAltText(), result);
+		CellTowerLte result = new CellTowerLte(mcc, mnc, location.getLac(), location.getCid(), location.getPsc());
 		result.setCellLocation(true);
+		this.add(result);
 		Log.d(this.getClass().getSimpleName(), String.format("Added GsmCellLocation for %s, %d G", result.getText(), result.getGeneration()));
 		return result;
 	}
@@ -104,22 +58,7 @@ public class CellTowerListLte extends CellTowerList<CellTowerLte> {
 			mcc = Integer.parseInt(networkOperator.substring(0, 3));
 			mnc = Integer.parseInt(networkOperator.substring(3));
 		}
-		CellTowerLte result = null;
-		CellTowerLte cand = this.get(mcc, mnc, cell.getLac(), cell.getCid());
-		if ((cand != null) && CellTower.matches(cell.getPsc(), cand.getPci()))
-			result = cand;
-
-		if (result == null) {
-			cand = this.get(cell.getPsc());
-			if ((cand != null)
-					&& CellTower.matches(mcc, cand.getMcc())
-					&& CellTower.matches(mnc, cand.getMnc())
-					&& CellTower.matches(cell.getLac(), cand.getTac())
-					&& CellTower.matches(cell.getCid(), cand.getCi()))
-				result = cand;
-		}
-		if (result == null)
-			result = new CellTowerLte(mcc, mnc, cell.getLac(), cell.getCid(), cell.getPsc());
+		CellTowerLte result = new CellTowerLte(mcc, mnc, cell.getLac(), cell.getCid(), cell.getPsc());
 		result.setNeighboringCellInfo(true);
 		int networkType = cell.getNetworkType();
 		switch (networkType) {
@@ -131,18 +70,7 @@ public class CellTowerListLte extends CellTowerList<CellTowerLte> {
 				return null;
 		}
 		result.setNetworkType(networkType);
-		if (result.getMcc() == CellTower.UNKNOWN)
-			result.setMcc(mcc);
-		if (result.getMnc() == CellTower.UNKNOWN)
-			result.setMnc(mnc);
-		if (result.getTac() == CellTower.UNKNOWN)
-			result.setTac(cell.getLac());
-		if (result.getCi() == CellTower.UNKNOWN)
-			result.setCi(cell.getCid());
-		if (result.getPci() == CellTower.UNKNOWN)
-			result.setPci(cell.getPsc());
-		this.put(result.getText(), result);
-		this.put(result.getAltText(), result);
+		this.add(result);
 		Log.d(this.getClass().getSimpleName(), String.format("Added NeighboringCellInfo for %s, %d G, %d dBm",
 				result.getText(),
 				result.getGeneration(),
@@ -165,37 +93,11 @@ public class CellTowerListLte extends CellTowerList<CellTowerLte> {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) 
 			return null;
 		CellIdentityLte cid = cell.getCellIdentity();
-		CellTowerLte result = null;
-		CellTowerLte cand = this.get(cid.getMcc(), cid.getMnc(), cid.getTac(), cid.getCi());
-		if ((cand != null) && CellTower.matches(cid.getPci(), cand.getPci()))
-			result = cand;
-
-		if (result == null) {
-			cand = this.get(cid.getPci());
-			if ((cand != null)
-					&& ((cid.getMcc() == Integer.MAX_VALUE) || CellTower.matches(cid.getMcc(), cand.getMcc()))
-					&& ((cid.getMnc() == Integer.MAX_VALUE) || CellTower.matches(cid.getMnc(), cand.getMnc()))
-					&& ((cid.getTac() == Integer.MAX_VALUE) || CellTower.matches(cid.getTac(), cand.getTac()))
-					&& ((cid.getCi() == Integer.MAX_VALUE) ||CellTower.matches(cid.getCi(), cand.getCi())))
-				result = cand;
-		}
-		if (result == null)
-			result = new CellTowerLte(cid.getMcc(), cid.getMnc(), cid.getTac(), cid.getCi(), cid.getPci());
-		if (result.getMcc() == CellTower.UNKNOWN)
-			result.setMcc(cid.getMcc());
-		if (result.getMnc() == CellTower.UNKNOWN)
-			result.setMnc(cid.getMnc());
-		if (result.getTac() == CellTower.UNKNOWN)
-			result.setTac(cid.getTac());
-		if (result.getCi() == CellTower.UNKNOWN)
-			result.setCi(cid.getCi());
-		if (result.getPci() == CellTower.UNKNOWN)
-			result.setPci(cid.getPci());
-		this.put(result.getText(), result);
-		this.put(result.getAltText(), result);
+		CellTowerLte result = new CellTowerLte(cid.getMcc(), cid.getMnc(), cid.getTac(), cid.getCi(), cid.getPci());
 		result.setCellInfo(true);
 		result.setDbm(cell.getCellSignalStrength().getDbm());
 		result.setServing(cell.isRegistered());
+		this.add(result);
 		Log.d(this.getClass().getSimpleName(), String.format("Added CellInfoLte for %s, %d G, %d dBm",
 				result.getText(),
 				result.getGeneration(),

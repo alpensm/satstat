@@ -11,17 +11,6 @@ import android.telephony.cdma.CdmaCellLocation;
 
 public class CellTowerListCdma extends CellTowerList<CellTowerCdma> {
 	/**
-	 * Returns the cell tower with the specified data, or {@code null} if it is not in the list. 
-	 */
-	public CellTowerCdma get(int sid, int nid, int bsid) {
-		String entry = CellTowerCdma.getText(sid, nid, bsid);
-		if (entry == null)
-			return null;
-		else
-			return this.get(entry);
-	}
-	
-	/**
 	 * Adds or updates a cell tower.
 	 * <p>
 	 * If the cell tower is already in the list, it is replaced; if not, a new
@@ -32,12 +21,10 @@ public class CellTowerListCdma extends CellTowerList<CellTowerCdma> {
 	 * @return The new or updated entry.
 	 */
 	public CellTowerCdma update(CdmaCellLocation location) {
-		CellTowerCdma result = this.get(location.getSystemId(), location.getNetworkId(), location.getBaseStationId());
-		if (result == null) {
-			result = new CellTowerCdma(location.getSystemId(), location.getNetworkId(), location.getBaseStationId());
-			this.put(result.getText(), result);
-		}
+		this.removeSource(CellTower.SOURCE_CELL_LOCATION);
+		CellTowerCdma result = new CellTowerCdma(location.getSystemId(), location.getNetworkId(), location.getBaseStationId());
 		result.setCellLocation(true);
+		this.add(result);
 		return result;
 	}
 	
@@ -57,14 +44,11 @@ public class CellTowerListCdma extends CellTowerList<CellTowerCdma> {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) 
 			return null;
 		CellIdentityCdma cid = cell.getCellIdentity();
-		CellTowerCdma result = this.get(cid.getSystemId(), cid.getNetworkId(), cid.getBasestationId());
-		if (result == null) {
-			result = new CellTowerCdma(cid.getSystemId(), cid.getNetworkId(), cid.getBasestationId());
-			this.put(result.getText(), result);
-		}
+		CellTowerCdma result = new CellTowerCdma(cid.getSystemId(), cid.getNetworkId(), cid.getBasestationId());
 		result.setCellInfo(true);
 		result.setDbm(cell.getCellSignalStrength().getDbm());
 		result.setServing(cell.isRegistered());
+		this.add(result);
 		return result;
 	}
 	

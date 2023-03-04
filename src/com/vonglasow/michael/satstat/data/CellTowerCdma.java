@@ -13,7 +13,36 @@ public class CellTowerCdma extends CellTower {
 		this.setNid(nid);
 		this.setBsid(bsid);
 	}
-	
+
+	/**
+	 * 
+	 * @param that The other instance to compare to.
+	 * @return A negative value if {@code this < that}, a positive value if {@code this > that}, zero otherwise.
+	 */
+	public int compareTo(Object that) {
+		CellTowerCdma thatCdma = null;
+		if (that instanceof CellTowerCdma)
+			thatCdma = (CellTowerCdma) that;
+		else if (that instanceof CellTower)
+			return super.compareTo(that);
+		int res = super.compareTo(thatCdma);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.sid, thatCdma.sid);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.nid, thatCdma.nid);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.bsid, thatCdma.bsid);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.source, thatCdma.source);
+		if (res != 0)
+			return res;
+		return res;
+	}
+
 	public int getBsid() {
 		return bsid;
 	}

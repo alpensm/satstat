@@ -327,20 +327,60 @@ public class RadioSectionFragment extends Fragment {
 	/**
 	 * Gets the display icon for a cell.
 	 * @param generation The network generation, i.e. {@code 2}, {@code 3} or {@code 4} for any flavor of 2G, 3G or 4G, or {@code 0} for unknown
-	 * @return The resource identifier for the icon. If {@code generation} is {@code 0} or not a valid generation, the icon returned will be black and white.
+	 * @param source The source which reported the cell, one of the values defined in {@link CellTower}.
+	 * @return The resource identifier for the icon, in a color expressing the cell generation and the
+	 * serving or neighboring cells grayed out as appropriate four the source,
+	 * If {@code generation} is {@code 0} or not a valid generation, the icon returned will be black and white.
+	 * If {@code source} is invalid, all cells in the icon will be grayed out.
 	 */
-	public static int getCellIcon(int generation) {
-		switch (generation) {
-		case 2:
-			return(R.drawable.ic_content_cell_2g_all);
-		case 3:
-			return(R.drawable.ic_content_cell_3g_all);
-		case 4:
-			return(R.drawable.ic_content_cell_4g_all);
+	public static int getCellIcon(int generation, int source) {
+		switch (source) {
+		case CellTower.SOURCE_CELL_LOCATION:
+			switch (generation) {
+			case 2:
+				return(R.drawable.ic_content_cell_2g_serving);
+			case 3:
+				return(R.drawable.ic_content_cell_3g_serving);
+			case 4:
+				return(R.drawable.ic_content_cell_4g_serving);
+			default:
+				return(R.drawable.ic_content_cell_serving);
+			}
+		case CellTower.SOURCE_NEIGHBORING_CELL_INFO:
+			switch (generation) {
+			case 2:
+				return(R.drawable.ic_content_cell_2g_neighbor);
+			case 3:
+				return(R.drawable.ic_content_cell_3g_neighbor);
+			case 4:
+				return(R.drawable.ic_content_cell_4g_neighbor);
+			default:
+				return(R.drawable.ic_content_cell_neighbor);
+			}
+		case CellTower.SOURCE_CELL_INFO:
+			switch (generation) {
+			case 2:
+				return(R.drawable.ic_content_cell_2g_all);
+			case 3:
+				return(R.drawable.ic_content_cell_3g_all);
+			case 4:
+				return(R.drawable.ic_content_cell_4g_all);
+			default:
+				return(R.drawable.ic_content_cell_all);
+			}
 		default:
-			return(R.drawable.ic_content_cell_all);
+			switch (generation) {
+			case 2:
+				return(R.drawable.ic_content_cell_2g_none);
+			case 3:
+				return(R.drawable.ic_content_cell_3g_none);
+			case 4:
+				return(R.drawable.ic_content_cell_4g_none);
+			default:
+				return(R.drawable.ic_content_cell_none);
+			}
 		}
-	}
+}
 
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -505,39 +545,24 @@ public class RadioSectionFragment extends Fragment {
 		int lteVisibility = View.GONE;
 
 		rilCells.removeAllViews();
-		if (mCellsGsm.containsValue(mServingCell)) {
-			showCellGsm((CellTowerGsm) mServingCell);
+		for (CellTowerGsm cell : mCellsGsm.getAll()) {
+			showCellGsm(cell);
 			gsmVisibility = View.VISIBLE;
 		}
-		for (CellTowerGsm cell : mCellsGsm.getAll())
-			if (cell.hasSource() && (cell != mServingCell)) {
-				showCellGsm(cell);
-				gsmVisibility = View.VISIBLE;
-			}
 		rilGsmLayout.setVisibility(gsmVisibility);
 
 		rilCdmaCells.removeAllViews();
-		if (mCellsCdma.containsValue(mServingCell)) {
-			showCellCdma((CellTowerCdma) mServingCell);
+		for (CellTowerCdma cell : mCellsCdma.getAll()) {
+			showCellCdma(cell);
 			cdmaVisibility = View.VISIBLE;
 		}
-		for (CellTowerCdma cell : mCellsCdma.getAll())
-			if (cell.hasSource() && (cell != mServingCell)) {
-				showCellCdma(cell);
-				cdmaVisibility = View.VISIBLE;
-			}
 		rilCdmaLayout.setVisibility(cdmaVisibility);
 
 		rilLteCells.removeAllViews();
-		if (mCellsLte.containsValue(mServingCell)) {
-			showCellLte((CellTowerLte) mServingCell);
+		for (CellTowerLte cell : mCellsLte.getAll()) {
+			showCellLte(cell);
 			lteVisibility = View.VISIBLE;
 		}
-		for (CellTowerLte cell : mCellsLte.getAll())
-			if (cell.hasSource() && (cell != mServingCell)) {
-				showCellLte(cell);
-				lteVisibility = View.VISIBLE;
-			}
 		rilLteLayout.setVisibility(lteVisibility);
 	}
 
@@ -550,7 +575,7 @@ public class RadioSectionFragment extends Fragment {
 		TextView bsid = (TextView) row.findViewById(R.id.bsid);
 		TextView dbm = (TextView) row.findViewById(R.id.dbm);
 
-		type.setImageResource(getCellIcon(cellTower.getGeneration()));
+		type.setImageResource(getCellIcon(cellTower.getGeneration(), cellTower.getSource()));
 
 		sid.setText(formatCellData(rilCdmaCells.getContext(), null, cellTower.getSid()));
 
@@ -575,7 +600,7 @@ public class RadioSectionFragment extends Fragment {
 		TextView unit = (TextView) row.findViewById(R.id.unit);
 		TextView dbm = (TextView) row.findViewById(R.id.dbm);
 
-		type.setImageResource(getCellIcon(cellTower.getGeneration()));
+		type.setImageResource(getCellIcon(cellTower.getGeneration(), cellTower.getSource()));
 
 		mcc.setText(formatCellData(rilCells.getContext(), "%03d", cellTower.getMcc()));
 
@@ -613,7 +638,7 @@ public class RadioSectionFragment extends Fragment {
 		TextView unit = (TextView) row.findViewById(R.id.unit);
 		TextView dbm = (TextView) row.findViewById(R.id.dbm);
 
-		type.setImageResource(getCellIcon(cellTower.getGeneration()));
+		type.setImageResource(getCellIcon(cellTower.getGeneration(), cellTower.getSource()));
 
 		mcc.setText(formatCellData(rilLteCells.getContext(), "%03d", cellTower.getMcc()));
 

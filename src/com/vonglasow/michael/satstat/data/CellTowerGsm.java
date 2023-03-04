@@ -13,13 +13,53 @@ public class CellTowerGsm extends CellTower {
 	
 	public CellTowerGsm(int mcc, int mnc, int lac, int cid, int psc) {
 		super();
-		this.setMcc(mcc);
-		this.setMnc(mnc);
 		this.setLac(lac);
 		this.setCid(cid);
+		if ((this.lac == CellTower.UNKNOWN) && (this.cid == CellTower.UNKNOWN)) {
+			this.setMcc(CellTower.UNKNOWN);
+			this.setMnc(CellTower.UNKNOWN);
+		} else {
+			this.setMcc(mcc);
+			this.setMnc(mnc);
+		}
 		this.setPsc(psc);
 	}
 	
+	/**
+	 * 
+	 * @param that The other instance to compare to.
+	 * @return A negative value if {@code this < that}, a positive value if {@code this > that}, zero otherwise.
+	 */
+	public int compareTo(Object that) {
+		CellTowerGsm thatGsm = null;
+		if (that instanceof CellTowerGsm)
+			thatGsm = (CellTowerGsm) that;
+		else if (that instanceof CellTower)
+			return super.compareTo(that);
+		int res = super.compareTo(thatGsm);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.mcc, thatGsm.mcc);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.mnc, thatGsm.mnc);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.lac, thatGsm.lac);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.cid, thatGsm.cid);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.psc, thatGsm.psc);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.source, thatGsm.source);
+		if (res != 0)
+			return res;
+		return res;
+	}
+
 	/**
 	 * Returns the alternate cell identity in text form.
 	 * <p>

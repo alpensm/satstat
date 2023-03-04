@@ -1,11 +1,10 @@
 package com.vonglasow.michael.satstat.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 
-public abstract class CellTowerList<T extends CellTower> extends HashMap<String, T> {
+public abstract class CellTowerList<T extends CellTower> extends TreeSet<T> {
 	/**
 	 * Returns all entries in the list.
 	 * <p>
@@ -14,7 +13,7 @@ public abstract class CellTowerList<T extends CellTower> extends HashMap<String,
 	 * @return
 	 */
 	public Set<T> getAll() {
-		Set<T> result = new HashSet<T>(this.values());
+		Set<T> result = new TreeSet<T>(this);
 		return result;
 	}
 	
@@ -32,14 +31,12 @@ public abstract class CellTowerList<T extends CellTower> extends HashMap<String,
 	 * or {@link com.michael.vonglasow.satstat.data.CellTower#SOURCE_CELL_INFO}.
 	 */
 	public void removeSource(int source) {
-		ArrayList<String> toDelete = new ArrayList<String>();
-		for (String entry : this.keySet()) {
-			CellTower ct = this.get(entry);
-			ct.source = ct.source & ~source;
-			if (ct.source == 0)
-				toDelete.add(entry);
+		TreeSet<CellTower> toDelete = new TreeSet<CellTower>();
+		Iterator<T> iterator = this.iterator();
+		while (iterator.hasNext()) {
+			CellTower ct = iterator.next();
+			if (ct.source == source)
+				iterator.remove();
 		}
-		for (String entry : toDelete)
-			this.remove(entry);
 	}
 }

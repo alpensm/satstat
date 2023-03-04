@@ -12,14 +12,54 @@ public class CellTowerLte extends CellTower {
 	
 	public CellTowerLte(int mcc, int mnc, int tac, int ci, int pci) {
 		super();
-		this.setMcc(mcc);
-		this.setMnc(mnc);
 		this.setTac(tac);
 		this.setCi(ci);
+		if ((this.tac == CellTower.UNKNOWN) && (this.ci == CellTower.UNKNOWN)) {
+			this.setMcc(CellTower.UNKNOWN);
+			this.setMnc(CellTower.UNKNOWN);
+		} else {
+			this.setMcc(mcc);
+			this.setMnc(mnc);
+		}
 		this.setPci(pci);
 		this.generation = 4;
 	}
-	
+
+	/**
+	 * 
+	 * @param that The other instance to compare to.
+	 * @return A negative value if {@code this < that}, a positive value if {@code this > that}, zero otherwise.
+	 */
+	public int compareTo(Object that) {
+		CellTowerLte thatLte = null;
+		if (that instanceof CellTowerLte)
+			thatLte = (CellTowerLte) that;
+		else if (that instanceof CellTower)
+			return super.compareTo(that);
+		int res = super.compareTo(thatLte);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.mcc, thatLte.mcc);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.mnc, thatLte.mnc);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.tac, thatLte.tac);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.ci, thatLte.ci);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.pci, thatLte.pci);
+		if (res != 0)
+			return res;
+		res = CellTower.compareInts(this.source, thatLte.source);
+		if (res != 0)
+			return res;
+		return res;
+	}
+
 	/**
 	 * Returns the alternate cell identity in text form.
 	 * <p>

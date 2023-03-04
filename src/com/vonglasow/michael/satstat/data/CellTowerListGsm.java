@@ -16,28 +16,6 @@ import android.util.Log;
 
 public class CellTowerListGsm extends CellTowerList<CellTowerGsm> {
 	/**
-	 * Returns the cell tower with the specified data, or {@code null} if it is not in the list. 
-	 */
-	public CellTowerGsm get(int psc) {
-		String entry = CellTowerGsm.getAltText(psc);
-		if (entry == null)
-			return null;
-		else
-			return this.get(entry);
-	}
-	
-	/**
-	 * Returns the cell tower with the specified data, or {@code null} if it is not in the list. 
-	 */
-	public CellTowerGsm get(int mcc, int mnc, int lac, int cid) {
-		String entry = CellTowerGsm.getText(mcc, mnc, lac, cid);
-		if (entry == null)
-			return null;
-		else
-			return this.get(entry);
-	}
-	
-	/**
 	 * Adds or updates a cell tower.
 	 * <p>
 	 * If the cell tower is already in the list, its data is updated; if not, a
@@ -50,42 +28,18 @@ public class CellTowerListGsm extends CellTowerList<CellTowerGsm> {
 	 * @return The new or updated entry.
 	 */
 	public CellTowerGsm update(String networkOperator, GsmCellLocation location) {
+		this.removeSource(CellTower.SOURCE_CELL_LOCATION);
 		int mcc = CellTower.UNKNOWN;
 		int mnc = CellTower.UNKNOWN;
 		if (networkOperator.length() > 3) {
 			mcc = Integer.parseInt(networkOperator.substring(0, 3));
 			mnc = Integer.parseInt(networkOperator.substring(3));
 		}
-		CellTowerGsm result = null;
-		CellTowerGsm cand = this.get(mcc, mnc, location.getLac(), location.getCid());
-		if ((cand != null) && CellTower.matches(location.getPsc(), cand.getPsc()))
-			result = cand;
-		if (result == null) {
-			cand = this.get(location.getPsc());
-			if ((cand != null)
-					&& CellTower.matches(mcc, cand.getMcc())
-					&& CellTower.matches(mnc, cand.getMnc())
-					&& CellTower.matches(location.getLac(), cand.getLac())
-					&& CellTower.matches(location.getCid(), cand.getCid()))
-				result = cand;
-		}
-		if (result == null)
-			result = new CellTowerGsm(mcc, mnc, location.getLac(), location.getCid(), location.getPsc());
-		if (result.getMcc() == CellTower.UNKNOWN)
-			result.setMcc(mcc);
-		if (result.getMnc() == CellTower.UNKNOWN)
-			result.setMnc(mnc);
-		if (result.getLac() == CellTower.UNKNOWN)
-			result.setLac(location.getLac());
-		if (result.getCid() == CellTower.UNKNOWN)
-			result.setCid(location.getCid());
-		if (result.getPsc() == CellTower.UNKNOWN)
-			result.setPsc(location.getPsc());
-		this.put(result.getText(), result);
-		this.put(result.getAltText(), result);
+		CellTowerGsm result = new CellTowerGsm(mcc, mnc, location.getLac(), location.getCid(), location.getPsc());
+		result.setCellLocation(true);
+		this.add(result);
 		if ((result.getText() == null) && (result.getAltText() == null))
 			Log.d(this.getClass().getSimpleName(), String.format("Added %d G cell with no data from GsmCellLocation", result.getGeneration()));
-		result.setCellLocation(true);
 		return result;
 	}
 	
@@ -107,22 +61,7 @@ public class CellTowerListGsm extends CellTowerList<CellTowerGsm> {
 			mcc = Integer.parseInt(networkOperator.substring(0, 3));
 			mnc = Integer.parseInt(networkOperator.substring(3));
 		}
-		CellTowerGsm result = null;
-		CellTowerGsm cand = this.get(mcc, mnc, cell.getLac(), cell.getCid());
-		if ((cand != null) && CellTower.matches(cell.getPsc(), cand.getPsc()))
-			result = cand;
-
-		if (result == null) {
-			cand = this.get(cell.getPsc());
-			if ((cand != null)
-					&& CellTower.matches(mcc, cand.getMcc())
-					&& CellTower.matches(mnc, cand.getMnc())
-					&& CellTower.matches(cell.getLac(), cand.getLac())
-					&& CellTower.matches(cell.getCid(), cand.getCid()))
-				result = cand;
-		}
-		if (result == null)
-			result = new CellTowerGsm(mcc, mnc, cell.getLac(), cell.getCid(), cell.getPsc());
+		CellTowerGsm result = new CellTowerGsm(mcc, mnc, cell.getLac(), cell.getCid(), cell.getPsc());
 		result.setNeighboringCellInfo(true);
 		int networkType = cell.getNetworkType();
 		switch (networkType) {
@@ -149,18 +88,7 @@ public class CellTowerListGsm extends CellTowerList<CellTowerGsm> {
 				// source
 		}
 		result.setNetworkType(networkType);
-		if (result.getMcc() == CellTower.UNKNOWN)
-			result.setMcc(mcc);
-		if (result.getMnc() == CellTower.UNKNOWN)
-			result.setMnc(mnc);
-		if (result.getLac() == CellTower.UNKNOWN)
-			result.setLac(cell.getLac());
-		if (result.getCid() == CellTower.UNKNOWN)
-			result.setCid(cell.getCid());
-		if (result.getPsc() == CellTower.UNKNOWN)
-			result.setPsc(cell.getPsc());
-		this.put(result.getText(), result);
-		this.put(result.getAltText(), result);
+		this.add(result);
 		if ((result.getText() == null) && (result.getAltText() == null))
 			Log.d(this.getClass().getSimpleName(), String.format("Added %d G cell with no data from NeighboringCellInfo", result.getGeneration()));
 		return result;
@@ -182,35 +110,10 @@ public class CellTowerListGsm extends CellTowerList<CellTowerGsm> {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) 
 			return null;
 		CellIdentityGsm cid = cell.getCellIdentity();
-		CellTowerGsm result = null;
-		CellTowerGsm cand = this.get(cid.getMcc(), cid.getMnc(), cid.getLac(), cid.getCid());
-		if ((cand != null) && CellTower.matches(cid.getPsc(), cand.getPsc()))
-			result = cand;
-		if (result == null) {
-			cand = this.get(cid.getPsc());
-			if ((cand != null)
-					&& ((cid.getMcc() == Integer.MAX_VALUE) || CellTower.matches(cid.getMcc(), cand.getMcc()))
-					&& ((cid.getMnc() == Integer.MAX_VALUE) || CellTower.matches(cid.getMnc(), cand.getMnc()))
-					&& ((cid.getLac() == Integer.MAX_VALUE) || CellTower.matches(cid.getLac(), cand.getLac()))
-					&& ((cid.getCid() == Integer.MAX_VALUE) ||CellTower.matches(cid.getCid(), cand.getCid())))
-				result = cand;
-		}
-		if (result == null)
-			result = new CellTowerGsm(cid.getMcc(), cid.getMnc(), cid.getLac(), cid.getCid(), cid.getPsc());
-		if (result.getMcc() == CellTower.UNKNOWN)
-			result.setMcc(cid.getMcc());
-		if (result.getMnc() == CellTower.UNKNOWN)
-			result.setMnc(cid.getMnc());
-		if (result.getLac() == CellTower.UNKNOWN)
-			result.setLac(cid.getLac());
-		if (result.getCid() == CellTower.UNKNOWN)
-			result.setCid(cid.getCid());
-		if (result.getPsc() == CellTower.UNKNOWN)
-			result.setPsc(cid.getPsc());
-		this.put(result.getText(), result);
-		this.put(result.getAltText(), result);
+		CellTowerGsm result = new CellTowerGsm(cid.getMcc(), cid.getMnc(), cid.getLac(), cid.getCid(), cid.getPsc());
 		result.setCellInfo(true);
 		result.setDbm(cell.getCellSignalStrength().getDbm());
+		this.add(result);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
 			result.setGeneration(2);
 		result.setServing(cell.isRegistered());
@@ -234,36 +137,11 @@ public class CellTowerListGsm extends CellTowerList<CellTowerGsm> {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) 
 			return null;
 		CellIdentityWcdma cid = cell.getCellIdentity();
-		CellTowerGsm result = null;
-		CellTowerGsm cand = this.get(cid.getMcc(), cid.getMnc(), cid.getLac(), cid.getCid());
-		if ((cand != null) && CellTower.matches(cid.getPsc(), cand.getPsc()))
-			result = cand;
-		if (result == null) {
-			cand = this.get(cid.getPsc());
-			if ((cand != null)
-					&& ((cid.getMcc() == Integer.MAX_VALUE) || CellTower.matches(cid.getMcc(), cand.getMcc()))
-					&& ((cid.getMnc() == Integer.MAX_VALUE) || CellTower.matches(cid.getMnc(), cand.getMnc()))
-					&& ((cid.getLac() == Integer.MAX_VALUE) || CellTower.matches(cid.getLac(), cand.getLac()))
-					&& ((cid.getCid() == Integer.MAX_VALUE) ||CellTower.matches(cid.getCid(), cand.getCid())))
-				result = cand;
-		}
-		if (result == null)
-			result = new CellTowerGsm(cid.getMcc(), cid.getMnc(), cid.getLac(), cid.getCid(), cid.getPsc());
-		if (result.getMcc() == CellTower.UNKNOWN)
-			result.setMcc(cid.getMcc());
-		if (result.getMnc() == CellTower.UNKNOWN)
-			result.setMnc(cid.getMnc());
-		if (result.getLac() == CellTower.UNKNOWN)
-			result.setLac(cid.getLac());
-		if (result.getCid() == CellTower.UNKNOWN)
-			result.setCid(cid.getCid());
-		if (result.getPsc() == CellTower.UNKNOWN)
-			result.setPsc(cid.getPsc());
-		this.put(result.getText(), result);
-		this.put(result.getAltText(), result);
+		CellTowerGsm result = new CellTowerGsm(cid.getMcc(), cid.getMnc(), cid.getLac(), cid.getCid(), cid.getPsc());
 		result.setCellInfo(true);
 		result.setDbm(cell.getCellSignalStrength().getDbm());
 		result.setGeneration(3);
+		this.add(result);
 		result.setServing(cell.isRegistered());
 		if ((result.getText() == null) && (result.getAltText() == null))
 			Log.d(this.getClass().getSimpleName(), String.format("Added %d G cell with no data from CellInfoWcdma", result.getGeneration()));

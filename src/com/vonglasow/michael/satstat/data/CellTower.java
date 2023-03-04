@@ -3,7 +3,7 @@ package com.vonglasow.michael.satstat.data;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-public abstract class CellTower {
+public abstract class CellTower implements Comparable {
 	public static final int SOURCE_CELL_LOCATION = 1;
 	public static final int SOURCE_NEIGHBORING_CELL_INFO = 2;
 	public static final int SOURCE_CELL_INFO = 4;
@@ -14,7 +14,35 @@ public abstract class CellTower {
 	protected int generation = 0;
 	protected boolean serving = false;
 	protected int source = 0;
-	
+
+	/**
+	 * Compares this object with the specified object for order.
+	 * 
+	 * Note: this class has a natural ordering that is inconsistent with equals. If {@code that} is not a
+	 * {@code CellTower}, the result is 0. Otherwise, only a minimal comparison is done, with serving cells
+	 * being sorted before others, otherwise cells being sorted by generation (later ones first). No further
+	 * comparisons are done and subclasses should override this method to refine the comparison.
+	 * 
+	 * @param thatTower The other instance to compare to.
+	 * @return A negative value if {@code this < that}, a positive value if {@code this > that}, zero otherwise.
+	 */
+	public int compareTo(Object that) {
+		CellTower thatTower = null;
+		if (that instanceof CellTower)
+			thatTower = (CellTower) that;
+		else
+			return 0;
+		int res = 0;
+		if (this.isServing())
+			res--;
+		if (thatTower.isServing())
+			res++;
+		if (res != 0)
+			return res;
+		res = -compareInts(this.generation, thatTower.generation);
+		return res;
+	}
+
 	/**
 	 * Returns the alternate cell identity in text form.
 	 * <p>
@@ -76,6 +104,14 @@ public abstract class CellTower {
 		default:
 			return 0;
 		}
+	}
+
+	/**
+	 * Returns the source from which the cell was obtained.
+	 * @return
+	 */
+	public int getSource() {
+		return source;
 	}
 
 	/**
@@ -194,5 +230,21 @@ public abstract class CellTower {
 	
 	public void setServing(boolean serving) {
 		this.serving = serving;
+	}
+
+	/**
+	 * Compares two integer values for sorting, placing {@link #UNKNOWN} last.
+	 * @param lhs
+	 * @param rhs
+	 * @return A negative value if {@code lhs < rhs}, a positive value if {@code lhs > rhs}, zero otherwise.
+	 */
+	protected static int compareInts(int lhs, int rhs) {
+		if (lhs == rhs)
+			return 0;
+		if (lhs == CellTower.UNKNOWN)
+			return 1;
+		if (rhs == CellTower.UNKNOWN)
+			return -1;
+		return Integer.compare(lhs, rhs);
 	}
 }
