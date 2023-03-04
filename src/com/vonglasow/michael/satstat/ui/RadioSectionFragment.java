@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013–2016 Michael von Glasow.
+ * Copyright © 2013–2023 Michael von Glasow.
  * 
  * This file is part of LSRN Tools.
  *
@@ -49,7 +49,6 @@ import android.net.wifi.ScanResult;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.telephony.CellInfo;
