@@ -288,11 +288,11 @@ public class RadioSectionFragment extends Fragment {
 	/**
 	 * Formats cell signal strength for display.
 	 * <p>
-	 * This helper function formats the signal strength for a cell. For valid
-	 * data a string with the properly formatted value will be returned. If the
-	 * input value is
-	 * {@link com.vonglasow.michael.satstat.data.CellTower#DBM_UNKNOWN}, then
-	 * the {@code value_none} resource string will be returned.
+	 * This helper function formats the signal strength for a cell. For valid data a string with the properly
+	 * formatted value will be returned. If the input value is
+	 * {@link com.vonglasow.michael.satstat.data.CellTower#DBM_UNKNOWN}, then the {@code value_none} resource
+	 * string will be returned. If the input value is {@link Integer.MAX_VALUE}, then the {@code value_max}
+	 * resource string will be returned.
 	 * @param context the context of the caller
 	 * @param format a format string, which must contain placeholders for exactly one variable, or {@code null}.
 	 * @param raw the signal strength in dBm
@@ -301,6 +301,8 @@ public class RadioSectionFragment extends Fragment {
 	public static String formatCellDbm(Context context, String format, int raw) {
 		if (raw == CellTower.DBM_UNKNOWN)
 			return context.getResources().getString(R.string.value_none);
+		else if (raw == Integer.MAX_VALUE)
+			return context.getResources().getString(R.string.value_max);
 		else {
 			String fmt = (format != null) ? format : "%d";
 			return String.format(fmt, raw);

@@ -35,6 +35,7 @@
     <string name="title_gps_acc">Error</string>
     <string name="title_gps_sats">Satellites</string>
     <string name="title_gps_ttff">TTFF (s)</string>
+    <string name="value_max">∞</string>
     <string name="value_none">–</string>
     <string name="value_N">N</string>
     <string name="value_NNE">NNE</string>
