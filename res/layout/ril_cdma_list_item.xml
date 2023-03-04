@@ -2,13 +2,13 @@
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="28" >
+    android:weightSum="27" >
 
     <ImageView
         android:id="@+id/type"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:scaleType="center" />
 
     <TextView
