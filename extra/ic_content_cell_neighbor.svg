@@ -25,7 +25,7 @@
      inkscape:pagecheckerboard="0"
      showgrid="false"
      inkscape:zoom="29.958333"
-     inkscape:cx="5.2072323"
+     inkscape:cx="5.0069542"
      inkscape:cy="12"
      inkscape:window-width="1920"
      inkscape:window-height="991"
@@ -45,7 +45,8 @@
      id="g22">
     <polygon
        points="10.21,15 13.79,15 15.59,12 13.79,9 10.21,9 8.41,12 "
-       id="polygon8" />
+       id="polygon8"
+       style="opacity:0.3" />
     <g
        id="g103">
       <polygon

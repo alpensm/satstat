@@ -305,14 +305,89 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/legend_rowheight"
+                    android:layout_height="wrap_content"
                     android:measureWithLargestChild="false"
                     android:orientation="horizontal"
                     android:weightSum="22" >
 
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/legend_rowheight"
+                        android:layout_gravity="center_vertical|center"
+                        android:layout_weight="3"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_content_cell_serving" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="19"
+                        android:gravity="center_vertical"
+                        android:text="@string/title_legend_radio_serving"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:measureWithLargestChild="false"
+                    android:orientation="horizontal"
+                    android:weightSum="22" >
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/legend_rowheight"
+                        android:layout_gravity="center_vertical|center"
+                        android:layout_weight="3"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_content_cell_neighbor" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="19"
+                        android:text="@string/title_legend_radio_neighboring"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:measureWithLargestChild="false"
+                    android:orientation="horizontal"
+                    android:weightSum="22" >
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/legend_rowheight"
+                        android:layout_gravity="center_vertical|center"
+                        android:layout_weight="3"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_content_cell_all" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="19"
+                        android:gravity="center_vertical"
+                        android:text="@string/title_legend_radio_all_cell"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:measureWithLargestChild="false"
+                    android:orientation="horizontal"
+                    android:weightSum="22" >
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/legend_rowheight"
                         android:layout_gravity="center_vertical|center"
                         android:layout_weight="3"
                         android:scaleType="center"
@@ -320,7 +395,7 @@
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="19"
                         android:gravity="center_vertical"
@@ -330,14 +405,14 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/legend_rowheight"
+                    android:layout_height="wrap_content"
                     android:measureWithLargestChild="false"
                     android:orientation="horizontal"
                     android:weightSum="22" >
 
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/legend_rowheight"
                         android:layout_gravity="center_vertical|center"
                         android:layout_weight="3"
                         android:scaleType="center"
@@ -345,7 +420,7 @@
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="19"
                         android:gravity="center_vertical"
@@ -355,14 +430,14 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/legend_rowheight"
+                    android:layout_height="wrap_content"
                     android:measureWithLargestChild="false"
                     android:orientation="horizontal"
                     android:weightSum="22" >
 
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/legend_rowheight"
                         android:layout_gravity="center_vertical|center"
                         android:layout_weight="3"
                         android:scaleType="center"
@@ -370,7 +445,7 @@
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="19"
                         android:gravity="center_vertical"
@@ -380,14 +455,14 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/legend_rowheight"
+                    android:layout_height="wrap_content"
                     android:measureWithLargestChild="false"
                     android:orientation="horizontal"
                     android:weightSum="22" >
 
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/legend_rowheight"
                         android:layout_gravity="center_vertical|center"
                         android:layout_weight="3"
                         android:scaleType="center"
@@ -395,7 +470,7 @@
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="19"
                         android:gravity="center_vertical"
@@ -405,14 +480,14 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/legend_rowheight"
+                    android:layout_height="wrap_content"
                     android:measureWithLargestChild="false"
                     android:orientation="horizontal"
                     android:weightSum="22" >
 
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/legend_rowheight"
                         android:layout_gravity="center_vertical|center"
                         android:layout_weight="3"
                         android:scaleType="center"
@@ -420,7 +495,7 @@
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="19"
                         android:gravity="center_vertical"
@@ -430,14 +505,14 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/legend_rowheight"
+                    android:layout_height="wrap_content"
                     android:measureWithLargestChild="false"
                     android:orientation="horizontal"
                     android:weightSum="22" >
 
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/legend_rowheight"
                         android:layout_gravity="center_vertical|center"
                         android:layout_weight="3"
                         android:scaleType="center"
@@ -445,7 +520,7 @@
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="19"
                         android:gravity="center_vertical"
