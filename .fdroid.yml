@@ -1,0 +1,27 @@
+Categories:
+  - Navigation
+License: GPL-3.0-or-later
+WebSite: https://mvglasow.gitlab.io/satstat/
+SourceCode: https://gitlab.com/mvglasow/satstat
+IssueTracker: https://gitlab.com/mvglasow/satstat/issues
+Changelog: https://gitlab.com/mvglasow/satstat/tags
+
+AutoName: SatStat
+
+RepoType: git
+Repo: https://gitlab.com/mvglasow/satstat.git
+
+Builds:
+  - versionName: 3.5
+    versionCode: 30500
+    commit: HEAD
+    init: ./setbuild.sh
+    gradle:
+      - yes
+    rm:
+      - libs/*jar
+
+AutoUpdateMode: Version satstat-%v
+UpdateCheckMode: Tags
+CurrentVersion: 3.5
+CurrentVersionCode: 30500
