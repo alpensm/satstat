@@ -18,8 +18,6 @@ Builds:
     init: ./setbuild.sh
     gradle:
       - yes
-    rm:
-      - libs/*jar
 
 AutoUpdateMode: Version satstat-%v
 UpdateCheckMode: Tags
